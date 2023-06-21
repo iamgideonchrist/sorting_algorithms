@@ -3,7 +3,7 @@
 This project was done during **ALX SE Studies** at **ALX School**. The end game is to learn about sorting algorithms (bubble sort, insertion sort, selection sort, quick sort, and so on) and Big O Notation in **C language**.
 
 ## Apparatus
-### Python Scripts
+### General
 * Used `vi` as editor
 * All files are compiled on Ubuntu 20.04 LTS using gcc, using the options -Wall -Werror -Wextra -pedantic -std=gnu89
 * All files end with a new line
