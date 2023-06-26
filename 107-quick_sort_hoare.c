@@ -1,75 +1,62 @@
 #include "sort.h"
+/**
+  * quick_sort_hoare - quicksort algorithm
+  * @array: array to be sorted
+  * @size: size of array
+  */
+void quick_sort_hoare(int *array, size_t size)
+{
+	sort_alg(array, 0, size - 1, size);
+}
 
 /**
- * partition - Partitions an array of integers.
- * @array: The array to be partitioned
- * @low: Low index
- * @high: High index
- * @size: Size of @array
- * Return: The partitioned array
- */
-int partition(int *array, size_t low, size_t high, size_t size)
+  * sort_alg - sorting algorithm
+  * @arr: array
+  * @left: leftmost index
+  * @right: rightmost index
+  * @size: size of full array
+  */
+void sort_alg(int *arr, int left, int right, size_t size)
 {
-	int pivot = array[high];
-	int x = low - 1;
-	int y = high + 1;
-	int tmp;
+	int pivot;
+
+	if ((right - left) < 2)
+		return;
+	pivot = split(arr, left, right, size);
+	sort_alg(arr, left, pivot, size);
+	sort_alg(arr, pivot, right, size);
+}
+
+/**
+  * split - pivot and split
+  * @arr: array
+  * @left: leftmost index
+  * @right:rightmost index
+  * @size: size of full index
+  * Return: pivot index
+  */
+int split(int *arr, int left, int right, size_t size)
+{
+	int i, i2, pivot, tmp;
+
+	pivot = arr[right];
+	i = left;
+	i2 = right;
 
 	while (1)
 	{
-		do
+		do i++;
+		while (arr[i] < pivot);
+		do i2--;
+		while (arr[i2] > pivot);
+		if (i < i2)
 		{
-			x++;
-		} while (array[x] < pivot);
-
-		do
-		{
-			y--;
-		} while (array[y] > pivot);
-
-		if (x > y)
-			return (y);
-		if (x == y)
-			return (y - 1);
-
-		tmp = array[x];
-		array[x] = array[y];
-		array[y] = tmp;
-
-		print_array(array, size);
+			tmp = arr[i2];
+			arr[i2] = arr[i];
+			arr[i] = tmp;
+			print_array(arr, size);
+		}
+		else
+			return (i2);
 	}
-}
-
-/**
- * quicksort - Sorts an array of integers in
- * ascending order using the Quick sort algorithm.
- * @array: The array to be sorted
- * @low: Low index
- * @high: High index
- * @size: Size of @array
- */
-void quicksort(int *array, int low, int high, size_t size)
-{
-	int p;
-	if (low < high)
-	{
-		p = partition(array, low, high, size);
-		quicksort(array, low, p, size);
-		quicksort(array, p + 1, high, size);
-	}
-}
-
-/**
- * quick_sort_hoare -  sorts an array of integers in
- * ascending order using the Quick sort algorithm.
- * @array: The array to be sorted
- * @size: Size of @array
- */
-void quick_sort_hoare(int *array, size_t size)
-{
-	unsigned int low = 0;
-	unsigned int high = size - 1;
-	if (size == 0 || size == 1)
-		return;
-	quicksort(array, low, high, size);
 }
