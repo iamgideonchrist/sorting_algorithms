@@ -1,101 +1,69 @@
 #include "sort.h"
-
 /**
- * print_parts - Prints a part of the array.
- * @array: The array to be printed
- * @min: Starting point of the array
- * @max: Ending point of the array
- */
-void print_parts(int *array, size_t min, size_t max)
+ * merge - merges l and r arrays into original array
+ * @array: pointer to array
+ * @size: size of the array
+ * @l: pointer to left array
+ * @r: pointer to right array
+ **/
+void merge(int *array, int *l, int *r, size_t size)
 {
-	size_t i;
-	i = min;
-	while (i < max)
-	{
-		if (i > min)
-			printf(", ");
-		printf("%d", array[i]);
-		i++;
-	}
-	printf("\n");
-}
+	int i = 0, j = 0, k = 0;
+	int size_l, size_r;
 
-/**
- * top_down - Merges an array using top down method.
- * @A: The left array
- * @B: The right array
- * @min: Starting point of the array
- * @mid: Middle point of the array
- * @max: Ending point of the array
- */
-void top_down(int *A, int *B, size_t min, size_t mid, size_t max)
-{
-	size_t i = min, j = mid, k;
-
+	size_l = size / 2;
+	size_r = size - size_l;
 	printf("Merging...\n");
 	printf("[left]: ");
-	print_parts(A, min, mid);
+	print_array(l, size_l);
 	printf("[right]: ");
-	print_parts(A, mid, max);
+	print_array(r, size_r);
 
-	for (k = min; k < max; k++)
+	while (i < size_l && j < size_r)
 	{
-		if (i < mid && (j >= max || A[i] <= A[j]))
-		{
-			B[k] = A[i];
-			i++;
-		}
+		if (l[i] < r[j])
+			array[k++] = l[i++];
 		else
-		{
-			B[k] = A[j];
-			j++;
-		}
+			array[k++] = r[j++];
 	}
 
+	while (i < size_l)
+		array[k++] = l[i++];
+
+	while (j < size_r)
+		array[k++] = r[j++];
 	printf("[Done]: ");
-	print_parts(B, min, max);
-
-	for (k = min; k < max; k++)
-		A[k] = B[k];
+	print_array(array, size);
 }
-
 /**
- * top_down_split - Splits array into two parts.
- * @A: The left array
- * @B: The right array
- * @min: Starting point of the array
- * @max: Ending point of the array
- */
-void top_down_split(int *A, int *B, size_t min, size_t max)
-{
-	size_t mid;
-
-	if (max - min < 2)
-		return;
-
-	mid = (min + max) / 2;
-	top_down_split(A, B, min, mid);
-	top_down_split(A, B, mid, max);
-	top_down(A, B, min, mid, max);
-}
-
-/**
- * merge_sort - Sorts an array of integers in
- * ascending order using the Merge sort algorithm.
- * @array: The array to be sorted
- * @size: Size of @array
- */
+ * merge_sort - sorts an array of integers in ascending order using
+ * the Merge sort algorithm
+ * @array: pointer to array
+ * @size: size of the array
+ **/
 void merge_sort(int *array, size_t size)
 {
-	int *newlist;
+	size_t mid = 0, i;
+	int left[1000];
+	int right[1000];
 
-	if (size == 0 || size == 1)
+	if (!array)
 		return;
 
-	newlist = malloc(sizeof(int) * size);
-	if (newlist == NULL)
+	if (size < 2)
 		return;
 
-	top_down_split(array, newlist, 0, size);
-	free(newlist);
+	mid = size / 2;
+	/*left = (int*)malloc(sizeof(int) * mid);*/
+	/*right = (int*)malloc(sizeof(int) * (size - mid));*/
+
+	for (i = 0; i < mid; i++)
+		left[i] = array[i];
+
+	for (i = mid; i < size; i++)
+		right[i - mid] = array[i];
+
+	merge_sort(left, mid);
+	merge_sort(right, size - mid);
+	merge(array, left, right, size);
 }
