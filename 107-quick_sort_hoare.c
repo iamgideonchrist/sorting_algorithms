@@ -1,62 +1,68 @@
 #include "sort.h"
-/**
-  * quick_sort_hoare - quicksort algorithm
-  * @array: array to be sorted
-  * @size: size of array
-  */
-void quick_sort_hoare(int *array, size_t size)
-{
-	sort_alg(array, 0, size - 1, size);
-}
 
 /**
-  * sort_alg - sorting algorithm
-  * @arr: array
-  * @left: leftmost index
-  * @right: rightmost index
-  * @size: size of full array
-  */
-void sort_alg(int *arr, int left, int right, size_t size)
+ * partition_h - array partition
+ * @array: array to sort
+ * @first: first position
+ * @last: last position
+ * @size: array size
+ * Return: int pivot index
+ */
+int partition_h(int *array, int first, int last, size_t size)
 {
-	int pivot;
-
-	if ((right - left) < 2)
-		return;
-	pivot = split(arr, left, right, size);
-	sort_alg(arr, left, pivot, size);
-	sort_alg(arr, pivot, right, size);
-}
-
-/**
-  * split - pivot and split
-  * @arr: array
-  * @left: leftmost index
-  * @right:rightmost index
-  * @size: size of full index
-  * Return: pivot index
-  */
-int split(int *arr, int left, int right, size_t size)
-{
-	int i, i2, pivot, tmp;
-
-	pivot = arr[right];
-	i = left;
-	i2 = right;
+	int pivot = array[last], i = first - 1, j = last + 1, aux;
 
 	while (1)
 	{
-		do i++;
-		while (arr[i] < pivot);
-		do i2--;
-		while (arr[i2] > pivot);
-		if (i < i2)
+		do {
+			i++;
+		} while (array[i] < pivot);
+
+		do {
+			j--;
+		} while (array[j] > pivot);
+
+		if (j < i)
+			return (j);
+		if (array[i] > array[j])
 		{
-			tmp = arr[i2];
-			arr[i2] = arr[i];
-			arr[i] = tmp;
-			print_array(arr, size);
+			aux = array[i];
+			array[i] = array[j];
+			array[j] = aux;
+			print_array(array, size);
 		}
-		else
-			return (i2);
 	}
+}
+
+/**
+ * qsh - sorts an array of integers recursively
+ * @array: array to sort
+ * @first: first position
+ * @last: last position
+ * @size: array size
+ */
+void qsh(int *array, int first, int last, size_t size)
+{
+	int pivot;
+
+	if (first < last)
+	{
+		pivot = partition_h(array, first, last, size);
+		qsh(array, first, pivot, size);
+		qsh(array, pivot + 1, last, size);
+	}
+}
+
+/**
+ * quick_sort_hoare - sorts an array of integers using the Quick
+ * sort hoare algorithm  in ascending order
+ * @array: array to sort
+ * @size: array size
+ */
+void quick_sort_hoare(int *array, size_t size)
+{
+	if (!array || size < 2)
+		return;
+
+	qsh(array, 0, size - 1, size);
 }
